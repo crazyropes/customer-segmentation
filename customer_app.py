@@ -3,23 +3,19 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Set Streamlit page config
 st.set_page_config(page_title="Customer Segmentation", layout="wide")
 
-# Load data
 data = pd.read_csv('Customer_Segments.csv')
 
-# Identify PCA columns
 pca_cols = ['PCA1', 'PCA2'] if 'PCA1' in data.columns else ['PC1', 'PC2']
 
-# ---------------- Session State Handling ---------------- #
 if 'page' not in st.session_state:
     st.session_state.page = 'welcome'
 
 def go_to_dashboard():
     st.session_state.page = 'dashboard'
 
-# ---------------- Welcome Page ---------------- #
+#  Welcome Page
 if st.session_state.page == 'welcome':
     st.markdown("""
         <div style='text-align: center;'>
@@ -46,7 +42,7 @@ if st.session_state.page == 'welcome':
     st.markdown("### 👇 Click the button below to explore the dashboard:")
     st.button("🚀 Enter Dashboard", on_click=go_to_dashboard)
 
-# ---------------- Dashboard Page ---------------- #
+#  Dashboard Page 
 elif st.session_state.page == 'dashboard':
     # Sidebar
     st.sidebar.title("Explore Segments")
@@ -87,3 +83,7 @@ elif st.session_state.page == 'dashboard':
             sns.histplot(data=data[data['Cluster'] == selected_cluster], x=feature, kde=True, ax=ax)
             ax.set_title(f"{feature} Distribution in Cluster {selected_cluster}")
             st.pyplot(fig)
+    if st.sidebar.button("⬅ Back to Welcome"):
+        st.session_state.page = 'welcome'
+        st.rerun()
+
